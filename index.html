@@ -302,8 +302,13 @@ async function buildPdf(r){
   newPage();
   // כותרת
   ctx.fillStyle='#0e3a22';ctx.fillRect(0,0,W,170);
-  ctx.textAlign='center';ctx.fillStyle='#fff';font(50,800);ctx.fillText('דו"ח משחק – חטיבה צעירה',W/2,86);
-  font(26,500);ctx.fillText('שנתונים: טרום ב׳ עד ילדים א׳',W/2,134);
+  var tTitle='דו"ח משחק – '+(r.team||r.signTeam||S.profile.team),tSz=50;
+  ctx.textAlign='center';ctx.fillStyle='#fff';font(tSz,800);
+  while(tSz>26&&ctx.measureText(tTitle).width>W-2*M){tSz-=2;font(tSz,800)}
+  ctx.fillText(tTitle,W/2,86);
+  var tSub='מאמן: '+(r.coach||r.signCoach||S.profile.coach),sSz=30;font(sSz,500);
+  while(sSz>20&&ctx.measureText(tSub).width>W-2*M){sSz-=2;font(sSz,500)}
+  ctx.fillText(tSub,W/2,136);
   ctx.textAlign='right';y=200;
 
   SECTIONS.forEach(function(sec,si){
@@ -314,12 +319,12 @@ async function buildPdf(r){
         var lines=wrap(v,W-2*M-lw-16);ctx.fillText(lines[0]||'',W-M-lw-16,y-12);
         for(var i=1;i<lines.length;i++){need(40);y+=40;font(26,400);ctx.fillStyle='#16211b';ctx.fillText(lines[i],W-M-lw-16,y-12)}});
       y+=14;return}
-    need(150);y+=28;
+    need(260);y+=28;
     ctx.fillStyle='#e3f3e9';ctx.fillRect(M-14,y,W-2*M+28,56);
     ctx.fillStyle='#16603a';ctx.fillRect(W-M+6,y,8,56);
     font(30,800);ctx.fillStyle='#0e3a22';ctx.fillText(sec.title,W-M-10,y+39);y+=70;
     sec.fields.forEach(function(f){need(90);
-      para(f.label,22,700,'#5d6b63',34,0);
+      para(f.label,24,700,'#000',36,0);
       para(r[f.k]||'—',26,400,'#16211b',40,16)});
   });
 
