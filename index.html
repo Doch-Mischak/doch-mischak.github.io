@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>דו"ח משחק – חטיבה צעירה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g900:#0e3a22;--g700:#16603a;--g500:#1f8a4c;--g100:#e3f3e9;
+  --bg:#f2f4f3;--card:#fff;--ink:#16211b;--muted:#5d6b63;--line:#dde4df;
+  --danger:#b3261e;--amber:#8a5a00;--amber-bg:#fff1cf;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{font-family:Heebo,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+button,input,textarea,select{font:inherit;color:inherit}
+header.top{background:var(--g900);color:#fff;padding:14px 16px 0}
+.top-in,.wrap{max-width:720px;margin:0 auto}
+.top-row{display:flex;align-items:center;gap:10px}
+.top h1{font-size:20px;line-height:1.25;margin:0;font-weight:800;flex:1;min-width:0}
+.top p{margin:2px 0 0;font-size:13px;opacity:.8}
+.iconbtn{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:12px;min-height:44px;padding:0 12px;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap}
+.tabs{display:flex;gap:4px;margin-top:12px}
+.tab{flex:1;background:transparent;border:0;color:#fff;opacity:.7;padding:12px 6px;font-weight:700;font-size:15px;border-bottom:4px solid transparent;cursor:pointer;min-height:48px}
+.tab[aria-selected=true]{opacity:1;border-bottom-color:#7fe0a3}
+main{padding:16px 14px 120px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.card h2{font-size:17px;margin:0 0 12px;color:var(--g700);font-weight:800}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;border-radius:14px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:16px;cursor:pointer;padding:10px 14px;text-decoration:none;color:var(--ink);text-align:center}
+.btn.primary{background:var(--g700);border-color:var(--g700);color:#fff}
+.btn.wa{background:#128c4a;border-color:#128c4a;color:#fff}
+.btn.big{min-height:84px;font-size:19px;border-radius:18px;box-shadow:0 6px 18px rgba(14,58,34,.22)}
+.btn.danger{color:var(--danger);border-color:#f0c9c6}
+.btn.sm{min-height:44px;font-size:14px;width:auto;flex:1 1 30%;padding:8px 10px;border-radius:12px}
+.btn:disabled{opacity:.55;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+label.f{display:block;margin-bottom:14px}
+label.f>span,.flabel{display:block;font-weight:700;font-size:15px;margin-bottom:6px}
+input[type=text],input[type=date],input[type=search],textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;background:#fff;min-height:48px}
+textarea{min-height:92px;resize:vertical}
+input:focus,textarea:focus,.btn:focus-visible,.seg button:focus-visible,.tab:focus-visible{outline:3px solid #7fd3a0;outline-offset:1px}
+.seg{display:flex;gap:6px;margin-bottom:14px}
+.seg button{flex:1;min-height:48px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-weight:700;cursor:pointer;padding:6px 4px;font-size:15px}
+.seg button[aria-pressed=true]{background:var(--g700);border-color:var(--g700);color:#fff}
+.score{margin-bottom:14px}
+.score label{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.score span{flex:1;min-width:0;font-weight:500;overflow-wrap:anywhere;background:var(--g100);border-radius:12px;padding:11px 12px;min-height:48px}
+.score input{flex:none;width:84px;min-height:48px;border:1.5px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-size:20px;font-weight:700;background:#fff}
+.note{font-size:13.5px;color:var(--muted)}
+.sig{background:var(--g100);border-radius:12px;padding:12px 14px;font-weight:700}
+.sig div+div{margin-top:4px}
+.bar{position:fixed;bottom:0;right:0;left:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px))}
+.bar .wrap{display:flex;gap:8px}
+.bar .btn{min-height:54px;font-size:15px;padding:6px 8px}
+.badge{display:inline-block;border-radius:999px;padding:2px 12px;font-size:13px;font-weight:700}
+.badge.saved{background:var(--amber-bg);color:var(--amber)}
+.badge.sent{background:var(--g100);color:var(--g700)}
+.rep-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rep-title{font-weight:800;font-size:17px;overflow-wrap:anywhere}
+.rep-meta{color:var(--muted);font-size:14px;margin:2px 0 12px;overflow-wrap:anywhere}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.filters .full{grid-column:1/-1}
+.filters>div{min-width:0}
+.filters input{min-width:0;max-width:100%;display:block}
+.filters label{font-size:13px;font-weight:700;color:var(--muted)}
+.qa{margin-bottom:12px}
+.qa b{display:block;font-size:14px;color:var(--muted)}
+.qa div{white-space:pre-wrap;overflow-wrap:anywhere}
+.empty{text-align:center;color:var(--muted);padding:28px 10px}
+.toast{position:fixed;top:14px;right:14px;left:14px;max-width:520px;margin:0 auto;background:var(--g900);color:#fff;padding:14px 16px;border-radius:14px;font-weight:700;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25);text-align:center}
+.toast.err{background:var(--danger)}
+.overlay{position:fixed;inset:0;background:rgba(10,25,17,.55);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));width:100%;max-width:560px;max-height:92vh;overflow:auto}
+.sheet h3{margin:0 0 6px;font-size:19px}
+.step{display:flex;gap:10px;margin-top:14px}
+.step i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--g100);color:var(--g700);font-style:normal;font-weight:800;display:flex;align-items:center;justify-content:center}
+.step>div{flex:1;min-width:0}
+.step p{margin:0 0 8px;font-size:14.5px}
+.draftline{font-size:13px;color:var(--muted);text-align:center;min-height:20px;margin-top:-4px}
+@media(min-width:700px){.sheet{border-radius:20px;margin-bottom:8vh}.overlay{align-items:center}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in" style="padding-bottom:14px">
+  <div class="top-row">
+    <div style="flex:1;min-width:0"><h1>דו"ח משחק – חטיבה צעירה</h1><p>שנתונים: טרום ב׳ עד ילדים א׳</p></div>
+    <button class="iconbtn" id="profBtn" hidden>פרופיל</button>
+  </div>
+</div></header>
+<main><div class="wrap" id="main"></div></main>
+<div id="barHost"></div>
+<div id="modalHost"></div>
+<div id="toastHost" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+
+/* ---------- מבנה הטופס (לפי הטופס המקורי) ---------- */
+var SECTIONS=[
+ {title:'פרטי המשחק',fields:[
+   {k:'matchDate',label:'תאריך המשחק',type:'date',req:true},
+   {k:'team',label:'שם הקבוצה',type:'text'},
+   {k:'coach',label:'שם המאמן',type:'text'},
+   {k:'rival',label:'יריבה',type:'text',req:true},
+   {k:'score',label:'תוצאה',type:'score'}]},
+ {title:'1. הערכה מקצועית',fields:[
+   {k:'worked',label:'מה עבד טוב במשחק',type:'area'},
+   {k:'improve',label:'מה דורש שיפור',type:'area'},
+   {k:'principles',label:'האם הקבוצה יישמה את עקרונות האימון?',type:'choice',opts:['כן','חלקית','לא']}]},
+ {title:'2. הערכת שחקנים',fields:[
+   {k:'standout',label:'שחקן שבלט לטובה ומדוע',type:'area'},
+   {k:'attention',label:'שחקן שזקוק לתשומת לב מקצועית',type:'area'}]},
+ {title:'3. התנהלות הקבוצה',fields:[
+   {k:'discipline',label:'משמעת, מחויבות והתנהגות',type:'choice',opts:['טובה','בינונית','דורשת שיפור']},
+   {k:'incidents',label:'אירועים חריגים, אם היו',type:'area'}]},
+ {title:'4. הפקת לקחים',fields:[
+   {k:'focus',label:'מה הדגש המרכזי לאימונים הקרובים',type:'area'}]},
+ {title:'התייחסות המנהל המקצועי',fields:[
+   {k:'managerNote',label:'האם נדרשת התייחסות של המנהל המקצועי',type:'area'}]}
+];
+var NOTE='הנחיה: יש למלא את הדו"ח לאחר כל משחק ולהעבירו למנהל המקצועי עד 24 שעות מסיום המשחק.';
+var KEYS=[];SECTIONS.forEach(function(s){s.fields.forEach(function(f){KEYS.push(f.k)})});KEYS.push('scoreUs','scoreThem');
+
+/* ---------- מצב ---------- */
+var S={db:null,dl:null,uid:null,profile:null,form:null,mem:{}};
+var store={
+  get:function(k){try{var v=localStorage.getItem('mr2_'+k);if(v)return JSON.parse(v)}catch(e){}return S.mem[k]||null},
+  set:function(k,v){S.mem[k]=v;try{localStorage.setItem('mr2_'+k,JSON.stringify(v))}catch(e){}},
+  del:function(k){delete S.mem[k];try{localStorage.removeItem('mr2_'+k)}catch(e){}}};
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fmtDate(s){if(!s)return '—';var p=String(s).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:s}
+function toast(msg,err){var h=$('#toastHost');h.innerHTML='<div class="toast'+(err?' err':'')+'" role="status">'+esc(msg)+'</div>';clearTimeout(toast.t);toast.t=setTimeout(function(){h.innerHTML=''},err?5000:2800)}
+function closeModal(){$('#modalHost').innerHTML=''}
+function modal(html){$('#modalHost').innerHTML='<div class="overlay" id="ov"><div class="sheet" role="dialog" aria-modal="true">'+html+'</div></div>';$('#ov').addEventListener('click',function(e){if(e.target.id==='ov')closeModal()})}
+function setBar(html){$('#barHost').innerHTML=html?'<div class="bar"><div class="wrap">'+html+'</div></div>':''}
+function confirmBox(title,text,okLabel,onOk){
+  modal('<h3>'+esc(title)+'</h3><p>'+esc(text)+'</p><div class="row"><button class="btn sm danger" id="cOk">'+esc(okLabel)+'</button><button class="btn sm" id="cNo">ביטול</button></div>');
+  $('#cNo').addEventListener('click',closeModal);
+  $('#cOk').addEventListener('click',function(){closeModal();onOk()});
+}
+
+/* ---------- עלייה: הדף עובד מיד; יכולות Claude נטענות ברקע ---------- */
+var caps=(async function(){
+  var C=window.claude;if(!C||typeof C.use!=='function')return;
+  try{var r=await Promise.all([C.use('downloads'),C.use('db'),C.use('user')]);
+    S.dl=r[0];S.db=r[1];S.uid=r[2]?await r[2].id():null;
+    if(S.db&&S.uid&&!S.profile){var d=await S.db.doc('data/users/'+S.uid+'/profile').get();
+      if(d.exists&&!S.profile){var v=d.data();if(v&&v.coach&&v.team){S.profile={coach:v.coach,team:v.team};store.set('profile',S.profile);if($('#pCoach')&&!$('#pCoach').value&&!$('#pTeam').value)openForm()}}}
+  }catch(e){}
+})();
+function boot(){S.profile=store.get('profile');if(S.profile&&S.profile.coach)openForm();else showProfile(true)}
+$('#profBtn').addEventListener('click',function(){showProfile(false)});
+
+/* ---------- פרופיל ---------- */
+function showProfile(first){
+  setBar('');$('#profBtn').hidden=true;
+  var p=S.profile||{};
+  $('#main').innerHTML='<div class="card"><h2>'+(first?'ברוך הבא! הגדרת פרופיל':'הגדרות פרופיל')+'</h2>'+
+   '<p class="note">'+(first?'ממלאים פעם אחת בלבד. ':'')+'הפרטים יופיעו אוטומטית כחתימה בתחתית כל דוח.</p>'+
+   '<label class="f"><span>שם המאמן</span><input type="text" id="pCoach" maxlength="60" value="'+esc(p.coach)+'" autocomplete="name"></label>'+
+   '<label class="f"><span>שם הקבוצה</span><input type="text" id="pTeam" maxlength="60" value="'+esc(p.team)+'"></label>'+
+   '<button class="btn primary" id="pSave">שמור פרופיל</button>'+
+   (first?'':'<button class="btn" id="pBack" style="margin-top:8px">חזרה</button>')+'</div>'+
+   '<p class="note" style="padding:0 6px">הפרטים נשמרים בטלפון הזה בלבד. הדוחות עצמם לא נשמרים במערכת – הם נשלחים כקובץ PDF בוואטסאפ.</p>';
+  $('#pSave').addEventListener('click',function(){
+    var coach=$('#pCoach').value.trim(),team=$('#pTeam').value.trim();
+    if(!coach||!team){toast('יש למלא שם מאמן ושם קבוצה',true);return}
+    var old=S.profile;S.profile={coach:coach,team:team};store.set('profile',S.profile);
+    if(S.db&&S.uid)S.db.doc('data/users/'+S.uid+'/profile').set({kind:'profile',coach:coach,team:team}).catch(function(){});
+    var d=store.get('draft');
+    if(d){if(!d.team||(old&&d.team===old.team))d.team=team;if(!d.coach||(old&&d.coach===old.coach))d.coach=coach;store.set('draft',d)}
+    toast('הפרופיל נשמר');openForm()});
+  var b=$('#pBack');if(b)b.addEventListener('click',openForm);
+  window.scrollTo(0,0);
+}
+
+/* ---------- טופס ---------- */
+function blank(){var f={};KEYS.forEach(function(k){f[k]=''});f.matchDate=today();f.team=S.profile.team;f.coach=S.profile.coach;return f}
+var dTimer=null;
+function queueDraft(){clearTimeout(dTimer);dTimer=setTimeout(saveDraft,500)}
+function saveDraft(){if(!S.form)return;store.set('draft',S.form);var el=$('#draftLine');if(el)el.textContent='הטיוטה נשמרה בטלפון · '+new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})}
+function openForm(){
+  var d=store.get('draft');
+  S.form=Object.assign(blank(),d||{});$('#profBtn').hidden=false;
+  var h='';
+  if(d)h+='<div class="row" style="align-items:center;margin-bottom:12px"><p class="note" style="flex:1;margin:0 4px">ממשיכים מהטיוטה שנשמרה</p><button class="btn sm danger" id="clearBtn" style="flex:none">נקה טופס</button></div>';
+  SECTIONS.forEach(function(sec){
+    h+='<div class="card"><h2>'+esc(sec.title)+'</h2>';
+    sec.fields.forEach(function(f){var v=S.form[f.k];
+      if(f.type==='choice'){h+='<div class="flabel" id="l_'+f.k+'">'+esc(f.label)+'</div><div class="seg" role="group" aria-labelledby="l_'+f.k+'">'+f.opts.map(function(o){return '<button type="button" data-k="'+f.k+'" data-v="'+esc(o)+'" aria-pressed="'+(v===o)+'">'+esc(o)+'</button>'}).join('')+'</div>'}
+      else if(f.type==='score'){h+='<div class="flabel">'+esc(f.label)+'</div><div class="score">'+
+        '<label><span id="snUs"></span><input type="number" inputmode="numeric" min="0" max="99" data-k="scoreUs" value="'+esc(S.form.scoreUs)+'" placeholder="0"></label>'+
+        '<label><span id="snThem"></span><input type="number" inputmode="numeric" min="0" max="99" data-k="scoreThem" value="'+esc(S.form.scoreThem)+'" placeholder="0"></label></div>'}
+      else if(f.type==='area'){h+='<label class="f"><span>'+esc(f.label)+'</span><textarea data-k="'+f.k+'" maxlength="2000">'+esc(v)+'</textarea></label>'}
+      else{h+='<label class="f"><span>'+esc(f.label)+(f.req?' *':'')+'</span><input type="'+f.type+'" data-k="'+f.k+'" maxlength="80" value="'+esc(v)+'"'+(f.ph?' placeholder="'+esc(f.ph)+'"':'')+'></label>'}
+    });
+    h+='</div>';
+  });
+  h+='<div class="card"><h2>חתימה</h2><div class="sig"><div>שם המאמן: '+esc(S.profile.coach)+'</div><div>שם הקבוצה: '+esc(S.profile.team)+'</div></div><p class="note" style="margin-bottom:0">'+esc(NOTE)+'</p></div>';
+  h+='<div class="draftline" id="draftLine"></div>';
+  $('#main').innerHTML=h;
+  setBar('<button class="btn wa" id="sendBtn">שליחת הדוח בוואטסאפ</button>');
+  $('#sendBtn').addEventListener('click',startSend);scoreNames();
+  var c=$('#clearBtn');if(c)c.addEventListener('click',function(){confirmBox('לנקות את הטופס?','כל מה שמולא בטופס יימחק.','נקה טופס',resetForm)});
+  window.scrollTo(0,0);
+}
+function scoreNames(){var a=$('#snUs'),b=$('#snThem');if(!a)return;a.textContent=(S.form.team||'').trim()||'הקבוצה שלנו';b.textContent=(S.form.rival||'').trim()||'היריבה'}
+function scoreLine(f){var us=f.scoreUs,th=f.scoreThem;if(us===''&&th==='')return '';return (f.team||'הקבוצה שלנו')+' '+(us===''?'—':us)+' : '+(th===''?'—':th)+' '+(f.rival||'היריבה')}
+function resetForm(){clearTimeout(dTimer);store.del('draft');openForm()}
+$('#main').addEventListener('input',function(e){var k=e.target.dataset&&e.target.dataset.k;if(!k||!S.form)return;S.form[k]=e.target.value;if(k==='team'||k==='rival')scoreNames();queueDraft()});
+$('#main').addEventListener('click',function(e){
+  var sb=e.target.closest('.seg button');
+  if(sb&&S.form){var k=sb.dataset.k,v=sb.dataset.v;S.form[k]=S.form[k]===v?'':v;
+    sb.parentNode.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',String(S.form[k]===b.dataset.v))});queueDraft()}
+});
+
+/* ---------- שליחה: הודעה קצרה + קובץ PDF ---------- */
+function waText(r){return 'סיכום משחק: '+(r.team||S.profile.team)+' נגד '+r.rival+'\nמאמן: '+(r.coach||S.profile.coach)+'\nתאריך: '+fmtDate(r.matchDate)}
+function startSend(){
+  var f=S.form;KEYS.forEach(function(k){f[k]=String(f[k]||'').trim()});
+  if(!f.matchDate){toast('יש לבחור תאריך משחק',true);return}
+  if(!f.rival){toast('יש למלא את שם היריבה',true);return}
+  clearTimeout(dTimer);saveDraft();
+  f.score=scoreLine(f);
+  var r=Object.assign({},f,{signCoach:S.profile.coach,signTeam:S.profile.team}),txt=waText(r);
+  var standalone=!(window.claude&&typeof window.claude.use==='function');
+  var fname='סיכום-משחק-'+(r.matchDate||'')+'.pdf';
+  var waBlock='<div class="sig" style="font-weight:500;white-space:pre-wrap;margin-bottom:8px" id="shMsg">'+esc(txt)+'</div>'+
+   '<a class="btn'+(standalone?'':' wa')+'" id="shWa" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(txt)+'">'+(standalone?'פתיחת וואטסאפ עם ההודעה בלבד':'פתיחת וואטסאפ')+'</a><button class="btn sm" id="shCopy" style="margin-top:8px;width:100%">העתקת ההודעה</button>';
+  modal('<h3>שליחת הדוח בוואטסאפ</h3>'+
+   (standalone?
+   '<div class="step"><i>1</i><div><p id="shHint">מכין את קובץ הדוח…</p><button class="btn wa" id="shShare" disabled>מכין את הקובץ…</button></div></div>'+
+   '<div class="step"><i>2</i><div><p>ההודעה שתישלח עם הקובץ. אם היא לא הופיעה בוואטסאפ – אפשר להעתיק ולהדביק אותה.</p>'+waBlock+'</div></div>'
+   :
+   '<div class="step"><i>1</i><div><p>מורידים את קובץ הדוח (PDF).</p><button class="btn primary" id="shPdf">הורדת קובץ הדוח</button></div></div>'+
+   '<div class="step"><i>2</i><div><p>פותחים את וואטסאפ עם ההודעה המוכנה, בוחרים את המנהל, ומצרפים את הקובץ (סימן האטב 📎 ← מסמך).</p>'+waBlock+'</div></div>')+
+   '<div class="step"><i>3</i><div><p>אחרי ששלחתם – אפשר לנקות את הטופס לקראת המשחק הבא. הדוח לא נשמר במערכת.</p><button class="btn" id="shDone">סיימתי – טופס חדש</button></div></div>'+
+   '<button class="btn" id="shClose" style="margin-top:16px">חזרה לטופס</button>');
+  if(standalone){
+    buildPdf(r).then(function(blob){
+      var btn=$('#shShare'),hint=$('#shHint');if(!btn)return;
+      var file=null;try{file=new File([blob],fname,{type:'application/pdf'})}catch(e){}
+      var can=false;try{can=!!(file&&navigator.canShare&&navigator.canShare({files:[file]}))}catch(e){}
+      btn.disabled=false;
+      if(can){
+        hint.textContent='לוחצים, בוחרים WhatsApp ואת המנהל – הקובץ וההודעה נשלחים יחד.';
+        btn.textContent='שיתוף הדוח בוואטסאפ';
+        btn.addEventListener('click',function(){navigator.share({files:[file],text:txt}).catch(function(e){if(!e||e.name!=='AbortError')toast('השיתוף לא הצליח. נסו שוב.',true)})});
+      }else{
+        hint.textContent='במכשיר הזה אין שיתוף ישיר. מורידים את הקובץ, פותחים את וואטסאפ ומצרפים אותו (סימן האטב 📎 ← מסמך).';
+        btn.textContent='הורדת קובץ הדוח';btn.className='btn primary';
+        btn.addEventListener('click',function(){var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},60000)});
+      }
+    }).catch(function(){var btn=$('#shShare');if(btn)btn.textContent='הפקת הקובץ נכשלה';toast('לא ניתן היה להפיק את הקובץ. נסו שוב.',true)});
+  }
+  $('#shClose').addEventListener('click',closeModal);
+  if($('#shPdf'))$('#shPdf').addEventListener('click',function(){downloadPdf(r,this)});
+  $('#shCopy').addEventListener('click',async function(){try{await navigator.clipboard.writeText(txt);toast('ההודעה הועתקה')}catch(e){toast('ההעתקה לא אושרה במכשיר',true)}});
+  $('#shDone').addEventListener('click',function(){confirmBox('לנקות את הטופס?','ודאו שהדוח כבר נשלח – הוא לא נשמר במערכת.','נקה והתחל טופס חדש',resetForm)});
+}
+async function downloadPdf(r,btn){
+  var old=btn.textContent;btn.disabled=true;btn.textContent='מכין PDF…';
+  try{
+    await caps;
+    if(!S.dl){toast('הורדת קבצים אינה זמינה בתצוגה הזו. יש לפתוח את הדף באפליקציית Claude או בדפדפן, מחוברים לחשבון.',true)}
+    else{var blob=await buildPdf(r);
+      await S.dl.save({filename:'סיכום-משחק-'+(r.matchDate||'')+'.pdf',data:blob});
+      toast('קובץ הדוח מוכן')}
+  }catch(e){
+    if(e&&e.code==='declined')toast('ההורדה בוטלה');
+    else toast('לא ניתן היה להפיק את הקובץ. נסו שוב.',true);
+  }
+  btn.disabled=false;btn.textContent=old;
+}
+
+/* ---------- הפקת PDF (עברית RTL, ציור על קנבס) ---------- */
+async function buildPdf(r){
+  try{await Promise.race([Promise.all([document.fonts.load('400 24px Heebo','אב'),document.fonts.load('700 24px Heebo','אב'),document.fonts.load('800 24px Heebo','אב')]),new Promise(function(res){setTimeout(res,2500)})])}catch(e){}
+  var W=1240,H=1754,M=92,SC=1.5,FF='Heebo, Arial, sans-serif',pages=[],ctx,y;
+  var BOTTOM=H-M-30;
+  function newPage(){var c=document.createElement('canvas');c.width=W*SC;c.height=H*SC;ctx=c.getContext('2d');ctx.scale(SC,SC);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.direction='rtl';ctx.textAlign='right';ctx.textBaseline='alphabetic';pages.push(c);y=M}
+  function font(sz,wt){ctx.font=wt+' '+sz+'px '+FF}
+  function wrap(text,maxW){var out=[];String(text).split('\n').forEach(function(p){var words=p.split(/\s+/).filter(Boolean);if(!words.length){out.push('');return}var line='';
+    words.forEach(function(w){var t=line?line+' '+w:w;if(ctx.measureText(t).width<=maxW){line=t;return}
+      if(line)out.push(line);
+      if(ctx.measureText(w).width>maxW){var ch='';Array.from(w).forEach(function(c){if(ctx.measureText(ch+c).width>maxW){out.push(ch);ch=c}else ch+=c});line=ch}else line=w});
+    if(line)out.push(line)});return out}
+  function para(text,sz,wt,color,lh,gapAfter){font(sz,wt);var lines=wrap(text,W-2*M);
+    lines.forEach(function(l){if(y+lh>BOTTOM){newPage()}font(sz,wt);ctx.fillStyle=color;y+=lh;ctx.fillText(l,W-M,y-lh*0.3)});y+=(gapAfter||0)}
+  function need(h){if(y+h>BOTTOM)newPage()}
+
+  newPage();
+  // כותרת
+  ctx.fillStyle='#0e3a22';ctx.fillRect(0,0,W,170);
+  ctx.textAlign='center';ctx.fillStyle='#fff';font(50,800);ctx.fillText('דו"ח משחק – חטיבה צעירה',W/2,86);
+  font(26,500);ctx.fillText('שנתונים: טרום ב׳ עד ילדים א׳',W/2,134);
+  ctx.textAlign='right';y=200;
+
+  SECTIONS.forEach(function(sec,si){
+    if(si===0){
+      sec.fields.forEach(function(f){var v=f.type==='date'?fmtDate(r[f.k]):(r[f.k]||'—');
+        need(46);y+=46;font(26,700);ctx.fillStyle='#16211b';var lab=f.label+':';ctx.fillText(lab,W-M,y-12);
+        var lw=ctx.measureText(lab).width;font(26,400);
+        var lines=wrap(v,W-2*M-lw-16);ctx.fillText(lines[0]||'',W-M-lw-16,y-12);
+        for(var i=1;i<lines.length;i++){need(40);y+=40;font(26,400);ctx.fillStyle='#16211b';ctx.fillText(lines[i],W-M-lw-16,y-12)}});
+      y+=14;return}
+    need(150);y+=28;
+    ctx.fillStyle='#e3f3e9';ctx.fillRect(M-14,y,W-2*M+28,56);
+    ctx.fillStyle='#16603a';ctx.fillRect(W-M+6,y,8,56);
+    font(30,800);ctx.fillStyle='#0e3a22';ctx.fillText(sec.title,W-M-10,y+39);y+=70;
+    sec.fields.forEach(function(f){need(90);
+      para(f.label,22,700,'#5d6b63',34,0);
+      para(r[f.k]||'—',26,400,'#16211b',40,16)});
+  });
+
+  // חתימה
+  need(190);y+=26;ctx.strokeStyle='#16603a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(M,y);ctx.lineTo(W-M,y);ctx.stroke();y+=10;
+  para('שם המאמן: '+(r.signCoach||S.profile.coach),28,700,'#16211b',46,0);
+  para('שם הקבוצה: '+(r.signTeam||S.profile.team),28,700,'#16211b',46,14);
+  para(NOTE,20,400,'#5d6b63',32,0);
+
+  pages.forEach(function(c,i){var x=c.getContext('2d');x.textAlign='center';x.direction='rtl';x.fillStyle='#8a958e';x.font='400 18px '+FF;x.fillText('עמוד '+(i+1)+' מתוך '+pages.length,W/2,H-44)});
+
+  var jpgs=[];
+  for(var i=0;i<pages.length;i++){var b=await new Promise(function(res){pages[i].toBlob(res,'image/jpeg',0.9)});jpgs.push(new Uint8Array(await b.arrayBuffer()))}
+  return assemblePdf(jpgs,W*SC,H*SC);
+}
+function assemblePdf(jpgs,pw,ph){
+  var enc=new TextEncoder(),parts=[],pos=0,off=[];
+  function put(x){var u=typeof x==='string'?enc.encode(x):x;parts.push(u);pos+=u.length}
+  function obj(n,body){off[n]=pos;put(n+' 0 obj\n'+body+'\nendobj\n')}
+  put('%PDF-1.4\n');put(new Uint8Array([37,226,227,207,211,10]));
+  var n=jpgs.length,kids=[];for(var i=0;i<n;i++)kids.push((3+i*3)+' 0 R');
+  obj(1,'<< /Type /Catalog /Pages 2 0 R >>');
+  obj(2,'<< /Type /Pages /Count '+n+' /Kids ['+kids.join(' ')+'] >>');
+  for(i=0;i<n;i++){var p=3+i*3,c=p+1,im=p+2;
+    obj(p,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 '+im+' 0 R >> >> /Contents '+c+' 0 R >>');
+    var cs='q 595.28 0 0 841.89 0 0 cm /Im0 Do Q';
+    obj(c,'<< /Length '+cs.length+' >>\nstream\n'+cs+'\nendstream');
+    off[im]=pos;put(im+' 0 obj\n<< /Type /XObject /Subtype /Image /Width '+pw+' /Height '+ph+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+jpgs[i].length+' >>\nstream\n');put(jpgs[i]);put('\nendstream\nendobj\n');
+  }
+  var total=2+n*3,xref=pos,x='xref\n0 '+(total+1)+'\n0000000000 65535 f \n';
+  for(i=1;i<=total;i++)x+=String(off[i]).padStart(10,'0')+' 00000 n \n';
+  put(x+'trailer\n<< /Size '+(total+1)+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF\n');
+  return new Blob(parts,{type:'application/pdf'});
+}
+
+boot();
+})();
+</script>
+</body>
+</html>
