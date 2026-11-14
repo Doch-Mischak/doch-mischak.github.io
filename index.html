@@ -235,8 +235,9 @@ function startSend(){
    '<a class="btn'+(standalone?'':' wa')+'" id="shWa" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(txt)+'">'+(standalone?'פתיחת וואטסאפ עם ההודעה בלבד':'פתיחת וואטסאפ')+'</a><button class="btn sm" id="shCopy" style="margin-top:8px;width:100%">העתקת ההודעה</button>';
   modal('<h3>שליחת הדוח בוואטסאפ</h3>'+
    (standalone?
-   '<div class="step"><i>1</i><div><p id="shHint">מכין את קובץ הדוח…</p><button class="btn wa" id="shShare" disabled>מכין את הקובץ…</button></div></div>'+
-   '<div class="step"><i>2</i><div><p>ההודעה שתישלח עם הקובץ. אם היא לא הופיעה בוואטסאפ – אפשר להעתיק ולהדביק אותה.</p>'+waBlock+'</div></div>'
+   '<div class="step"><i>1</i><div><p>קודם מעתיקים את ההודעה:</p><div class="sig" style="font-weight:500;white-space:pre-wrap;margin-bottom:8px" id="shMsg">'+esc(txt)+'</div><button class="btn primary" id="shCopy">העתקת ההודעה</button></div></div>'+
+   '<div class="step"><i>2</i><div><p id="shHint">מכין את קובץ הדוח…</p><button class="btn wa" id="shShare" disabled>מכין את הקובץ…</button>'+
+   '<a class="btn" id="shWa" hidden style="margin-top:8px" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(txt)+'">פתיחת וואטסאפ</a></div></div>'
    :
    '<div class="step"><i>1</i><div><p>מורידים את קובץ הדוח (PDF).</p><button class="btn primary" id="shPdf">הורדת קובץ הדוח</button></div></div>'+
    '<div class="step"><i>2</i><div><p>פותחים את וואטסאפ עם ההודעה המוכנה, בוחרים את המנהל, ומצרפים את הקובץ (סימן האטב 📎 ← מסמך).</p>'+waBlock+'</div></div>')+
@@ -249,19 +250,22 @@ function startSend(){
       var can=false;try{can=!!(file&&navigator.canShare&&navigator.canShare({files:[file]}))}catch(e){}
       btn.disabled=false;
       if(can){
-        hint.textContent='לוחצים, בוחרים WhatsApp ואת המנהל – הקובץ וההודעה נשלחים יחד.';
+        hint.textContent='עכשיו שולחים את הקובץ: לוחצים, בוחרים WhatsApp ואת המנהל, מדביקים את ההודעה שהעתקתם (לחיצה ארוכה ← הדבקה) ושולחים.';
         btn.textContent='שיתוף הדוח בוואטסאפ';
         btn.addEventListener('click',function(){navigator.share({files:[file],text:txt}).catch(function(e){if(!e||e.name!=='AbortError')toast('השיתוף לא הצליח. נסו שוב.',true)})});
       }else{
         hint.textContent='במכשיר הזה אין שיתוף ישיר. מורידים את הקובץ, פותחים את וואטסאפ ומצרפים אותו (סימן האטב 📎 ← מסמך).';
-        btn.textContent='הורדת קובץ הדוח';btn.className='btn primary';
+        btn.textContent='הורדת קובץ הדוח';btn.className='btn primary';$('#shWa').hidden=false;
         btn.addEventListener('click',function(){var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},60000)});
       }
     }).catch(function(){var btn=$('#shShare');if(btn)btn.textContent='הפקת הקובץ נכשלה';toast('לא ניתן היה להפיק את הקובץ. נסו שוב.',true)});
   }
   $('#shClose').addEventListener('click',closeModal);
   if($('#shPdf'))$('#shPdf').addEventListener('click',function(){downloadPdf(r,this)});
-  $('#shCopy').addEventListener('click',async function(){try{await navigator.clipboard.writeText(txt);toast('ההודעה הועתקה')}catch(e){toast('ההעתקה לא אושרה במכשיר',true)}});
+  $('#shCopy').addEventListener('click',async function(){var b=this,ok=false;
+    try{await navigator.clipboard.writeText(txt);ok=true}catch(e){
+      try{var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');ta.remove()}catch(e2){}}
+    if(ok){toast('ההודעה הועתקה');if(standalone)b.textContent='ההודעה הועתקה ✓'}else toast('ההעתקה לא הצליחה. אפשר לסמן את הטקסט ולהעתיק ידנית.',true)});
   $('#shDone').addEventListener('click',function(){confirmBox('לנקות את הטופס?','ודאו שהדוח כבר נשלח – הוא לא נשמר במערכת.','נקה והתחל טופס חדש',resetForm)});
 }
 async function downloadPdf(r,btn){
